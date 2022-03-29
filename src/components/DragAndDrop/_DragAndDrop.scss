@@ -1,0 +1,13 @@
+@import "../../_base.scss";
+
+.tasklist {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 450px;
+    max-width: 340px;
+    padding: 10px 10px 20px 10px;
+    background: $background-color;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    overflow-y: auto;
+}
