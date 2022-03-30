@@ -10,6 +10,7 @@ import SingleTask from '../SingleTask/SingleTask'
 const DragAndDrop = () => {
 
     const [tasks, setTasks] = useState([])
+    const [error, setError] = useState(false)
     const inputRef = useRef()
     const [inputTask, setInputTask] = useState({ completed: false, id: '', title: '' })
 
@@ -36,9 +37,15 @@ const DragAndDrop = () => {
     }, [])
 
     const addTaskHandler = () => {
-        setTasks([inputTask, ...tasks])
-        localStorage.setItem('taskList', JSON.stringify([inputTask, ...tasks]))
-        setInputTask({ completed: false, id: '', title: '' })
+        if (inputTask.title === '') {
+            setError(true)
+            inputRef.current.focus()
+        } else {
+            setError(false)
+            setTasks([inputTask, ...tasks])
+            localStorage.setItem('taskList', JSON.stringify([inputTask, ...tasks]))
+            setInputTask({ completed: false, id: '', title: '' })
+        }
     }
 
     const onDragEnd = (result) => {
@@ -62,7 +69,8 @@ const DragAndDrop = () => {
         <DragDropContext onDragEnd={onDragEnd}>
             <div className='tasklist'>
                 <div className='tasklist_actions'>
-                    <input type="text" placeholder='Add Task'
+                    <input className={error ? 'tasklist_actions_inputerror' : 'tasklist_actions_input'}
+                        type="text" placeholder={error ? 'Please add a task' : 'Add Task'}
                         value={inputTask.title}
                         ref={inputRef}
                         onKeyPress={(e) => { e.key === "Enter" && addTaskHandler() }}
