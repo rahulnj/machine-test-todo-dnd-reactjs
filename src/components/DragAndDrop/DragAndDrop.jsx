@@ -1,46 +1,99 @@
-import React, { useEffect, useState } from 'react'
-import './_DragAndDrop.scss'
-import { Droppable } from 'react-beautiful-dnd'
-import SingleTask from '../SingleTask/SingleTask'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
+import './_DragAndDrop.scss'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import SingleTask from '../SingleTask/SingleTask'
+
+
+
 
 const DragAndDrop = () => {
-    const [tasks, setTasks] = useState([{}])
+
+    const [tasks, setTasks] = useState([])
+    const inputRef = useRef()
+    const [inputTask, setInputTask] = useState({ completed: false, id: '', title: '' })
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const { data } = await axios.get('https://jsonplaceholder.typicode.com/todos/')
-                console.log(data);
-                setTasks(data.slice(0, 20))
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchData();
+        inputRef.current.focus()
     }, [])
 
 
-    return (
-        <Droppable droppableId='todolist-active'>
-            {
-                (provided) => (
-                    <div className='tasklist'
-                        ref={provided.innerRef} {...provided.droppableProps}>
-                        {
-                            tasks?.map((task, index) => (
-                                <SingleTask
-                                    id={task?.id}
-                                    index={index}
-                                    title={task?.title}
-                                />
-                            ))
-                        }
-                        {provided.placeholder}
-                    </div >
-                )
+    useEffect(() => {
+        if (localStorage.getItem("taskList")) {
+            setTasks(JSON.parse(localStorage.getItem("taskList")))
+        } else {
+            const fetchData = async () => {
+                try {
+                    const { data } = await axios.get('https://jsonplaceholder.typicode.com/todos/')
+                    setTasks(data.slice(0, 20))
+                    localStorage.setItem('taskList', JSON.stringify(data.slice(0, 20)))
+                } catch (error) {
+                    console.log(error);
+                }
             }
+            fetchData();
+        }
+    }, [])
 
-        </Droppable >
+    const addTaskHandler = () => {
+        setTasks([inputTask, ...tasks])
+        localStorage.setItem('taskList', JSON.stringify([inputTask, ...tasks]))
+        setInputTask({ completed: false, id: '', title: '' })
+    }
+
+    const onDragEnd = (result) => {
+        console.log(result);
+        const { source, destination } = result;
+        if (!destination) return;
+
+        if (destination.index === source.index) return;
+
+        let add;
+        let updatedTaskList = tasks
+        if (destination.droppableId === source.droppableId) {
+            add = updatedTaskList[source.index]
+            updatedTaskList.splice(source.index, 1)
+            updatedTaskList.splice(destination.index, 0, add)
+        }
+        setTasks(updatedTaskList)
+        localStorage.setItem('taskList', JSON.stringify(updatedTaskList))
+    }
+
+    return (
+        <DragDropContext onDragEnd={onDragEnd}>
+            <div className='tasklist'>
+                <div className='tasklist_actions'>
+                    <input type="text" placeholder='Add Task'
+                        value={inputTask.title}
+                        ref={inputRef}
+                        onKeyPress={(e) => { e.key === "Enter" && addTaskHandler() }}
+                        onChange={(e) => setInputTask({ ...inputTask, id: new Date().getTime(), title: e.target.value })}
+                    />
+                    <button className='tasklist_actions_successbtn'
+                        onClick={addTaskHandler}
+                    >Add</button>
+                </div>
+                <Droppable droppableId='tasklist-active'>
+                    {
+                        (provided) => (
+                            <div className='tasklist_wrapper'
+                                ref={provided.innerRef} {...provided.droppableProps}>
+                                {
+                                    tasks?.map((task, index) => (
+                                        <SingleTask
+                                            id={task?.id}
+                                            index={index}
+                                            title={task?.title}
+                                        />
+                                    ))
+                                }
+                                {provided.placeholder}
+                            </div >
+                        )
+                    }
+                </Droppable >
+            </div>
+        </DragDropContext >
     )
 }
 

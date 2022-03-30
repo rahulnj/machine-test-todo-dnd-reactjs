@@ -3,6 +3,7 @@ import './_SingleTask.scss'
 import { Draggable } from 'react-beautiful-dnd'
 
 const SingleTask = ({ id, title, index }) => {
+
     return (
         <div key={id}>
             <Draggable draggableId={id?.toString()} index={index}>
@@ -11,12 +12,12 @@ const SingleTask = ({ id, title, index }) => {
                         <div className='singletask'
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            ref={provided.innerRef}>
+                            ref={provided.innerRef}
+                        >
                             <p>
                                 {title}
                             </p>
                         </div>
-
                     )
                 }
             </Draggable>

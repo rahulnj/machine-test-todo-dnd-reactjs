@@ -3,11 +3,57 @@
 .tasklist {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 10px;
     width: 500px;
     height: 450px;
     max-width: 340px;
     padding: 10px 10px 20px 10px;
     background: $background-color;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    overflow-y: auto;
+    input {
+        padding: 10px 16px;
+        font-size: 16px;
+        color: #32383c;
+        background-color: #fff;
+        border: 1px solid $main-color;
+        border-radius: 5px;
+        margin-top: 5px;
+        width: 70%;
+        transition: all 0.2s ease;
+    }
+    input:focus {
+        outline: none;
+        box-shadow: 0 0 2px 4px #d3ddf1;
+    }
+    &_actions {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        &_successbtn {
+            background-color: $success;
+            border-radius: 4px;
+            border: 0;
+            box-shadow: rgba(1, 60, 136, 0.5) 0 -1px 3px 0 inset, rgba(0, 44, 97, 0.1) 0 3px 6px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 60px;
+            padding: 12px 16px;
+            text-align: center;
+            user-select: none;
+            transition: all 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        &_successbtn:hover {
+            background-color: #37c72d;
+            transform: translateY(-2px);
+        }
+    }
+    &_wrapper {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
 }
