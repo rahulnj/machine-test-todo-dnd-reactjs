@@ -1,3 +1,4 @@
+@import "../../_base.scss";
 .singletask {
     display: flex;
     align-items: center;
@@ -5,7 +6,7 @@
     height: 50px;
     margin-bottom: 5px;
     text-align: center;
-    background: #5d9cec;
+    background: $primary;
     border-radius: 5px;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.13);
     p {

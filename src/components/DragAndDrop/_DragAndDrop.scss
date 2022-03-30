@@ -29,9 +29,9 @@
     &_actions {
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 8px;
         &_successbtn {
-            background-color: $success;
+            background-color: $primary;
             border-radius: 4px;
             border: 0;
             box-shadow: rgba(1, 60, 136, 0.5) 0 -1px 3px 0 inset, rgba(0, 44, 97, 0.1) 0 3px 6px 0;
@@ -47,7 +47,7 @@
             transition: all 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
         &_successbtn:hover {
-            background-color: #37c72d;
+            background-color: $primary;
             transform: translateY(-2px);
         }
     }
